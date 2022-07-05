@@ -10,10 +10,12 @@ class CustomTextInput extends StatelessWidget {
   final String hintText;
   final String imgUrl;
   final bool obsecureText;
+  final TextEditingController textEditingController;
   const CustomTextInput({
     Key? key,
     required this.hintText,
     required this.imgUrl,
+    required this.textEditingController,
     this.obsecureText = false,
   }) : super(key: key);
 
@@ -26,6 +28,7 @@ class CustomTextInput extends StatelessWidget {
           color: Color(0xFF2B2937), borderRadius: BorderRadius.circular(18)),
       child: TextFormField(
         obscureText: obsecureText,
+        controller: textEditingController,
         style: kRegular.copyWith(
           fontSize: 16,
           color: kWhiteColor,

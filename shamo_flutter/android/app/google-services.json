@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "678325268498",
+    "project_id": "shamo-flutter",
+    "storage_bucket": "shamo-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678325268498:android:aaeef431778e80bf8e28cb",
+        "android_client_info": {
+          "package_name": "com.example.shamo_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678325268498-qpj2hmheqdbvcl1f8rqt252hs2f3u1hk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChqzkwCZ0vhKfMOFOsAsUctVq8aPmHZfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678325268498-qpj2hmheqdbvcl1f8rqt252hs2f3u1hk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

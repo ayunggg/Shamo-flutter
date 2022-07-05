@@ -6,7 +6,11 @@ import 'package:shamo_flutter/ui/widgets/custom_button.dart';
 import 'package:shamo_flutter/ui/widgets/custom_text_input.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  SignInPage({Key? key}) : super(key: key);
+
+  final TextEditingController passwordController =
+      TextEditingController(text: '');
+  final TextEditingController emailController = TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +102,7 @@ class SignInPage extends StatelessWidget {
             CustomTextInput(
               hintText: 'Your email address',
               imgUrl: 'assets/icons/icon_email.png',
+              textEditingController: emailController,
             ),
             SizedBox(
               height: 20,
@@ -115,6 +120,7 @@ class SignInPage extends StatelessWidget {
             CustomTextInput(
               hintText: 'Your Password',
               imgUrl: 'assets/icons/icon_password.png',
+              textEditingController: passwordController,
               obsecureText: true,
             ),
             SizedBox(
