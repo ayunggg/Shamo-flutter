@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shamo_flutter/cubit/auth_cubit_cubit.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 import 'package:shamo_flutter/ui/widgets/custom_button.dart';
 import 'package:shamo_flutter/ui/widgets/custom_text_input.dart';
@@ -23,7 +25,10 @@ class SignInPage extends StatelessWidget {
           },
           child: Container(
             width: double.infinity,
-            margin: EdgeInsets.only(bottom: 30),
+            margin: EdgeInsets.only(
+              bottom: 30,
+              top: 30,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -82,7 +87,6 @@ class SignInPage extends StatelessWidget {
     Widget inputSection() {
       return Container(
         margin: EdgeInsets.only(
-          top: 160,
           left: 24,
           right: 24,
         ),
@@ -126,11 +130,34 @@ class SignInPage extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            CustomButton(
-              title: 'Sign In',
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/main', (route) => false);
+            BlocConsumer<AuthCubit, AuthCubitState>(
+              listener: (context, state) {
+                if (state is AuthSuccess) {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/main', (route) => false);
+                } else if (state is AuthFailed) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: kRedColor,
+                      content: Text(state.error),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                if (state is AuthLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return CustomButton(
+                  title: 'Sign In',
+                  onPressed: () {
+                    context.read<AuthCubit>().signIn(
+                        email: emailController.text,
+                        password: passwordController.text);
+                  },
+                );
               },
             ),
           ],
@@ -141,7 +168,7 @@ class SignInPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: SafeArea(
-        child: Stack(
+        child: ListView(
           children: [
             header(),
             inputSection(),

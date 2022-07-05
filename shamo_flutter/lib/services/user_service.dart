@@ -27,7 +27,8 @@ class UserService {
       return UserModel(
           id: documentSnapshot.id,
           name: documentSnapshot['name'],
-          email: documentSnapshot['email']);
+          email: documentSnapshot['email'],
+          username: documentSnapshot['username']);
     } catch (e) {
       rethrow;
     }

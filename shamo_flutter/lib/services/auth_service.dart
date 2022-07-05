@@ -29,10 +29,12 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       UserModel user = UserModel(
-        id: userCredential.user!.uid,
-        name: name,
-        email: email,
-      );
+          id: userCredential.user!.uid,
+          name: name,
+          email: email,
+          username: username);
+
+      await UserService().setUser(user);
       return user;
     } catch (e) {
       rethrow;
