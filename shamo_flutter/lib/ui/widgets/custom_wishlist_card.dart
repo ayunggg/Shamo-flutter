@@ -1,10 +1,17 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo_flutter/cubit/wishlist_cubit_cubit.dart';
+import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 
 class WishlistCard extends StatelessWidget {
-  const WishlistCard({Key? key}) : super(key: key);
+  final ProductModel productModel;
+  const WishlistCard({
+    Key? key,
+    required this.productModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +29,8 @@ class WishlistCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              'assets/images/image_newarrival1.png',
+            child: Image.network(
+              productModel.gallery[0].url,
               width: 60,
               height: 60,
             ),
@@ -36,7 +43,7 @@ class WishlistCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Terrex Urban Low',
+                  productModel.name,
                   style: kSemiBold.copyWith(
                     color: kWhiteColor,
                   ),
@@ -45,7 +52,7 @@ class WishlistCard extends StatelessWidget {
                   height: 2,
                 ),
                 Text(
-                  '\$143,98',
+                  '\$${productModel.price}',
                   style: kRegular.copyWith(
                     color: kBlueColor,
                   ),
@@ -53,10 +60,15 @@ class WishlistCard extends StatelessWidget {
               ],
             ),
           ),
-          Image.asset(
-            'assets/icons/icon_love.png',
-            width: 34,
-            height: 34,
+          GestureDetector(
+            onTap: () {
+              context.read<WishlistCubitCubit>().setProduct(productModel);
+            },
+            child: Image.asset(
+              'assets/icons/icon_love.png',
+              width: 34,
+              height: 34,
+            ),
           ),
         ],
       ),

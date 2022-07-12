@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shamo_flutter/cubit/product_cubit.dart';
+import 'package:shamo_flutter/cubit/wishlist_cubit_cubit.dart';
 import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 import 'package:shamo_flutter/ui/pages/homePage/page_wishlist.dart';
@@ -41,7 +42,6 @@ class _DetailProductState extends State<DetailProduct> {
   ];
 
   int currentIndex = 0;
-  bool isWishlist = false;
   @override
   Widget build(BuildContext context) {
     Widget indicator(int index) {
@@ -241,10 +241,12 @@ class _DetailProductState extends State<DetailProduct> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        isWishlist = !isWishlist;
-                      });
-                      if (isWishlist == true) {
+                      context
+                          .read<WishlistCubitCubit>()
+                          .setProduct(widget.product);
+                      if (context
+                          .read<WishlistCubitCubit>()
+                          .isWishlist(widget.product)) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: kGreenColor,
@@ -276,21 +278,33 @@ class _DetailProductState extends State<DetailProduct> {
                         );
                       }
                     },
-                    child: Container(
-                      width: 46,
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: isWishlist ? kGreenColor : kGreyColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/icons/icon_wishlist.png',
-                          width: 20,
-                          height: 18,
-                          color: isWishlist ? kWhiteColor : Color(0xFF1F1D2B),
-                        ),
-                      ),
+                    child: BlocBuilder<WishlistCubitCubit, bool>(
+                      builder: (context, _) {
+                        return Container(
+                          width: 46,
+                          height: 46,
+                          decoration: BoxDecoration(
+                            color: context
+                                    .read<WishlistCubitCubit>()
+                                    .isWishlist(widget.product)
+                                ? kGreenColor
+                                : kGreyColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              'assets/icons/icon_wishlist.png',
+                              width: 20,
+                              height: 18,
+                              color: context
+                                      .read<WishlistCubitCubit>()
+                                      .isWishlist(widget.product)
+                                  ? kWhiteColor
+                                  : Color(0xFF1F1D2B),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   )
                 ],

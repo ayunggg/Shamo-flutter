@@ -1,6 +1,8 @@
 // ignore_for_file: unused_element, prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shamo_flutter/cubit/wishlist_cubit_cubit.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 import 'package:shamo_flutter/ui/widgets/custom_button.dart';
 import 'package:shamo_flutter/ui/widgets/custom_wishlist_card.dart';
@@ -89,11 +91,13 @@ class WishListPage extends StatelessWidget {
                 width: double.infinity,
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 30),
-                  children: [
-                    WishlistCard(),
-                    WishlistCard(),
-                    WishlistCard(),
-                  ],
+                  children: context
+                      .read<WishlistCubitCubit>()
+                      .wishlist
+                      .map((e) => WishlistCard(
+                            productModel: e,
+                          ))
+                      .toList(),
                 ),
               ),
             ),

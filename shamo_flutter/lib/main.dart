@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shamo_flutter/cubit/auth_cubit_cubit.dart';
 import 'package:shamo_flutter/cubit/product_cubit.dart';
+import 'package:shamo_flutter/cubit/wishlist_cubit_cubit.dart';
 import 'package:shamo_flutter/ui/pages/detail_chat_page.dart';
 import 'package:shamo_flutter/ui/pages/page_cart.dart';
 import 'package:shamo_flutter/ui/pages/page_checkout.dart';
-import 'package:shamo_flutter/ui/pages/page_detail_product.dart';
 import 'package:shamo_flutter/ui/pages/page_edit_profile.dart';
 import 'package:shamo_flutter/ui/pages/page_main.dart';
 import 'package:shamo_flutter/ui/pages/page_sign_in.dart';
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => ProductCubit()),
+        BlocProvider(create: (context) => WishlistCubitCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
