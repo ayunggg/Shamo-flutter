@@ -1,31 +1,26 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 
-class PopularCard extends StatelessWidget {
-  final String imgUrl;
-  final String categories;
-  final String name;
-  final String price;
+import '../pages/page_detail_product.dart';
 
-  const PopularCard({
-    Key? key,
-    required this.imgUrl,
-    required this.categories,
-    required this.name,
-    required this.price,
-  }) : super(key: key);
+class PopularCard extends StatelessWidget {
+  final ProductModel product;
+
+  const PopularCard(this.product);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/detail-product');
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => DetailProduct(product)));
       },
       child: Container(
         width: 215,
-        height: 280,
+        height: 320,
         margin: EdgeInsets.only(
           right: 30,
         ),
@@ -51,8 +46,8 @@ class PopularCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(
-                      imgUrl,
+                    image: NetworkImage(
+                      product.gallery[0].url,
                     ),
                   ),
                 ),
@@ -61,17 +56,19 @@ class PopularCard extends StatelessWidget {
                 height: 30,
               ),
               Text(
-                categories,
+                product.categories.name,
                 style: kRegular.copyWith(
                   fontSize: 12,
                   color: kGreyColor,
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
               SizedBox(
                 height: 6,
               ),
               Text(
-                name,
+                product.name,
                 style: kSemiBold.copyWith(
                   fontSize: 18,
                   color: kBlackColor,
@@ -81,11 +78,12 @@ class PopularCard extends StatelessWidget {
                 height: 6,
               ),
               Text(
-                price,
+                '\$${product.price}',
                 style: kMedium.copyWith(
                   fontSize: 14,
                   color: kBlueColor,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

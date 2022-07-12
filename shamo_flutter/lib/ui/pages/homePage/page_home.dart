@@ -9,6 +9,8 @@ import 'package:shamo_flutter/ui/widgets/custom_categories_item.dart';
 import 'package:shamo_flutter/ui/widgets/custom_populard_card.dart';
 import 'package:shamo_flutter/ui/widgets/custom_small_card_product.dart';
 
+import '../../../models/product_model.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -19,8 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    context.read<ProductCubit>().fetchProduct();
-    
+    context.read<ProductCubit>().fetchProduct(); 
     super.initState();
   }
 
@@ -158,7 +159,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    Widget popularProducts() {
+    Widget popularProducts(List<ProductModel> product) {
       return Container(
         margin: EdgeInsets.only(
           left: 30,
@@ -182,26 +183,9 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    PopularCard(
-                      imgUrl: 'assets/images/image_popular_card1.png',
-                      categories: 'Hikinh',
-                      name: 'COURT VISION 2.0',
-                      price: '\$58,67',
-                    ),
-                    PopularCard(
-                      imgUrl: 'assets/images/image_popular_card1.png',
-                      categories: 'Hikinh',
-                      name: 'COURT VISION 2.0',
-                      price: '\$58,67',
-                    ),
-                    PopularCard(
-                      imgUrl: 'assets/images/image_popular_card1.png',
-                      categories: 'Hikinh',
-                      name: 'COURT VISION 2.0',
-                      price: '\$58,67',
-                    ),
-                  ],
+                  children: product.map((ProductModel product) {
+                    return PopularCard(product);
+                  }).toList(),
                 ),
               ),
             )
@@ -210,7 +194,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    Widget newArrivals() {
+    Widget newArrivals(List<ProductModel> product) {
       return Container(
         margin: EdgeInsets.only(left: 30, right: 30, bottom: 30, top: 30),
         child: Column(
@@ -226,48 +210,42 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 14,
             ),
-            SmallCardProduct(
-              imgUrl: 'assets/images/image_newarrival1.png',
-              categories: 'football',
-              name: 'Predator 20.3 FirmGround',
-              price: '\$68,47',
-            ),
             Column(
-              children: [
-                SmallCardProduct(
-                  imgUrl: 'assets/images/image_newarrival2.png',
-                  categories: 'Running',
-                  name: 'Ultra 4D 5 Shoes',
-                  price: '\$285,73',
-                ),
-                SmallCardProduct(
-                  imgUrl: 'assets/images/image_newarrival3.png',
-                  categories: 'Basketball',
-                  name: 'Court Vision 2.0 Shoes',
-                  price: '\$57,15',
-                ),
-                SmallCardProduct(
-                  imgUrl: 'assets/images/image_newarrival4.png',
-                  categories: 'Training',
-                  name: 'LEGO® SPORT SHOES',
-                  price: '\$92,72',
-                ),
-              ],
+              children: product.map((ProductModel product) {
+                return SmallCardProduct(product: product);
+              }).toList(),
             ),
           ],
         ),
       );
     }
 
-    return Scaffold(
-        backgroundColor: kBackgroundColor,
-        body: ListView(
-          children: [
-            header(),
-            categoriesBar(),
-            popularProducts(),
-            newArrivals(),
-          ],
-        ));
+    return BlocConsumer<ProductCubit, ProductState>(
+      listener: (context, state) {
+        if (state is ProductFailed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: kRedColor,
+              content: Text(state.error),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is ProductSuccess) {
+          return ListView(
+            children: [
+              header(),
+              categoriesBar(),
+              popularProducts(state.product),
+              newArrivals(state.product),
+            ],
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
   }
 }

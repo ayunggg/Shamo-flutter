@@ -1,16 +1,28 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shamo_flutter/cubit/product_cubit.dart';
+import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
+import 'package:shamo_flutter/ui/pages/homePage/page_wishlist.dart';
 import 'package:shamo_flutter/ui/widgets/custom_button.dart';
+import 'package:shamo_flutter/ui/widgets/custom_familiar_shoes.dart';
 
 class DetailProduct extends StatefulWidget {
+  final ProductModel product;
+  DetailProduct(this.product);
   @override
   State<DetailProduct> createState() => _DetailProductState();
 }
 
 class _DetailProductState extends State<DetailProduct> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   final List images = [
     'assets/images/image_newarrival1.png',
     'assets/images/image_newarrival1.png',
@@ -49,67 +61,77 @@ class _DetailProductState extends State<DetailProduct> {
 
     Widget header() {
       int index = -1;
-      return Stack(
-        children: [
-          Column(
-            children: [
-              CarouselSlider(
-                items: images
-                    .map((e) => Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(e),
-                            ),
-                          ),
-                        ))
-                    .toList(),
-                options: CarouselOptions(
-                    initialPage: 0,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        currentIndex = index;
-                      });
-                    }),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: images.map((e) {
-              index++;
-              return indicator(index);
-            }).toList(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.chevron_left,
+      return BlocBuilder<ProductCubit, ProductState>(
+        builder: (context, state) {
+          if (state is ProductSuccess) {
+            return Stack(
+              children: [
+                Column(
+                  children: [
+                    CarouselSlider(
+                      items: widget.product.gallery
+                          .map((e) => Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(e.url),
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      options: CarouselOptions(
+                          initialPage: 0,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              currentIndex = index;
+                            });
+                          }),
+                    ),
+                  ],
                 ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.shopping_bag,
-                  color: kBackgroundColor1,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: widget.product.gallery.map((e) {
+                    index++;
+                    return indicator(index);
+                  }).toList(),
                 ),
-              ),
-            ],
-          ),
-        ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.chevron_left,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.shopping_bag,
+                        color: kBackgroundColor1,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       );
     }
 
     Future<void> showSuccessDialog() async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) => Container(
+        builder: (BuildContext context) => SizedBox(
           width: MediaQuery.of(context).size.width * 60,
           child: AlertDialog(
             backgroundColor: kBackgroundColor1,
@@ -161,7 +183,12 @@ class _DetailProductState extends State<DetailProduct> {
                   ),
                   CustomButton(
                     title: 'View My Cart',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WishListPage()));
+                    },
                   )
                 ],
               ),
@@ -171,21 +198,7 @@ class _DetailProductState extends State<DetailProduct> {
       );
     }
 
-    Widget familiarShoes(String imgUrl) {
-      return Container(
-        width: 54,
-        height: 54,
-        margin: EdgeInsets.only(right: 16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          image: DecorationImage(
-            image: AssetImage(imgUrl),
-          ),
-        ),
-      );
-    }
-
-    Widget buildContent() {
+    Widget buildContent(List<ProductModel> productModel) {
       return Container(
         padding: EdgeInsets.all(30),
         width: double.infinity,
@@ -208,7 +221,7 @@ class _DetailProductState extends State<DetailProduct> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'TERREX URBAN LOW',
+                        widget.product.name,
                         style: kSemiBold.copyWith(
                           fontSize: 18,
                           color: kWhiteColor,
@@ -218,7 +231,7 @@ class _DetailProductState extends State<DetailProduct> {
                         height: 2,
                       ),
                       Text(
-                        'Hiking',
+                        widget.product.categories.name,
                         style: kRegular.copyWith(
                           fontSize: 12,
                           color: kGreyColor,
@@ -301,7 +314,7 @@ class _DetailProductState extends State<DetailProduct> {
                     ),
                   ),
                   Text(
-                    '\$143,98',
+                    '\$${widget.product.price}',
                     style: kSemiBold.copyWith(
                       fontSize: 16,
                       color: kBlueColor,
@@ -312,6 +325,7 @@ class _DetailProductState extends State<DetailProduct> {
             ),
             //NOTE : DESCRIPTION
             Container(
+              width: double.infinity,
               margin: EdgeInsets.only(top: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,7 +340,7 @@ class _DetailProductState extends State<DetailProduct> {
                     height: 12,
                   ),
                   Text(
-                    'Unpaved trails and mixed surfaces are easy when you have the traction and support you need. Casual enough for the daily commute.',
+                    widget.product.description,
                     style: kLight.copyWith(
                       color: kGreyColor,
                     ),
@@ -353,8 +367,10 @@ class _DetailProductState extends State<DetailProduct> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: familiarShoesList.map((e) {
-                        return familiarShoes(e);
+                      children: productModel.map((ProductModel productModel) {
+                        return FamiliarShoe(
+                          product: productModel,
+                        );
                       }).toList(),
                     ),
                   )
@@ -396,13 +412,32 @@ class _DetailProductState extends State<DetailProduct> {
       );
     }
 
-    return Scaffold(
-      body: ListView(
-        children: [
-          header(),
-          buildContent(),
-        ],
-      ),
+    return BlocConsumer<ProductCubit, ProductState>(
+      listener: (context, state) {
+        if (state is ProductFailed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: kRedColor,
+              content: Text(state.error),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is ProductSuccess) {
+          return Scaffold(
+            body: ListView(
+              children: [
+                header(),
+                buildContent(state.product),
+              ],
+            ),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }

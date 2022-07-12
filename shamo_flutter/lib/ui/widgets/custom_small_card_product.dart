@@ -1,20 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 
 class SmallCardProduct extends StatelessWidget {
-  final String imgUrl;
-  final String categories;
-  final String name;
-  final String price;
-  const SmallCardProduct({
-    Key? key,
-    required this.imgUrl,
-    required this.categories,
-    required this.name,
-    required this.price,
-  }) : super(key: key);
+  final ProductModel product;
+  const SmallCardProduct({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +25,8 @@ class SmallCardProduct extends StatelessWidget {
                 color: Color(0xFFECEDEF),
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
-                  image: AssetImage(
-                    imgUrl,
+                  image: NetworkImage(
+                    product.gallery[0].url,
                   ),
                 ),
               ),
@@ -46,7 +38,7 @@ class SmallCardProduct extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      categories,
+                      product.categories.name,
                       style: kRegular.copyWith(
                         fontSize: 12,
                         color: kGreyColor,
@@ -56,7 +48,7 @@ class SmallCardProduct extends StatelessWidget {
                       height: 6,
                     ),
                     Text(
-                      name,
+                      product.name,
                       style: kSemiBold.copyWith(
                         fontSize: 18,
                         color: kWhiteColor,
@@ -66,7 +58,7 @@ class SmallCardProduct extends StatelessWidget {
                       height: 6,
                     ),
                     Text(
-                      price,
+                      '\$${product.price}',
                       style: kMedium.copyWith(
                         fontSize: 14,
                         color: kBlueColor,

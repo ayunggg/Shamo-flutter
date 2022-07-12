@@ -12,7 +12,7 @@ class ProductInitial extends ProductState {}
 class ProductLoading extends ProductState {}
 
 class ProductSuccess extends ProductState {
-  final List<Product> product;
+  final List<ProductModel> product;
 
   const ProductSuccess(this.product);
 

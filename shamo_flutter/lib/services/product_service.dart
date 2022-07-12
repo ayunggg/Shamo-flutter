@@ -1,20 +1,34 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+
 import 'package:shamo_flutter/models/product_model.dart';
+import 'package:http/http.dart' as http;
 
 class ProductService {
-  final CollectionReference _collectionReference =
-      FirebaseFirestore.instance.collection('product');
+  final baseUrl = Uri.parse('https://shamo-backend.buildwithangga.id/api');
 
-  Future<List<Product>> fetchProduct() async {
-    try {
-      QuerySnapshot querySnapshot = await _collectionReference.get();
+  Future<List<ProductModel>> fetchProduct() async {
+    var url = Uri.parse('$baseUrl/products');
+    var headers = {'Content-type': 'application/json'};
 
-      List<Product> product = querySnapshot.docs.map((e) {
-        return Product.fromJson(e.id.hashCode, e.data() as Map<String, dynamic>);
-      }).toList();
-      return product;
-    } catch (e) {
-      rethrow;
+    var response = await http.get(
+      url,
+      headers: headers,
+    );
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body)['data']['data'];
+      List<ProductModel> products = [];
+
+      for (var item in data) {
+        products.add(ProductModel.fromJson(item));
+      }
+      print(data);
+
+      return products;
+    } else {
+      throw Exception('Failed To Get Products');
     }
   }
 }

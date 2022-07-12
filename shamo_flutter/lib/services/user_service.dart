@@ -8,24 +8,25 @@ class UserService {
 
   Future<void> setUser(UserModel user) async {
     try {
-      _collectionReference.doc(user.id).set({
+      _collectionReference.doc(user.id.toString()).set({
         'email': user.email,
         'name': user.name,
         'username': user.username,
+        'token': user.token,
       });
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<UserModel> getUser(String id) async {
+  Future<UserModel> getUser(int id) async {
     await Firebase.initializeApp();
     try {
       DocumentSnapshot documentSnapshot =
-          await _collectionReference.doc(id).get();
+          await _collectionReference.doc(id.toString()).get();
 
       return UserModel(
-          id: documentSnapshot.id,
+          id: documentSnapshot.id.hashCode,
           name: documentSnapshot['name'],
           email: documentSnapshot['email'],
           username: documentSnapshot['username']);
