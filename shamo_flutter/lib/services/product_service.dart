@@ -15,7 +15,7 @@ class ProductService {
       headers: headers,
     );
 
-    print(response.body);
+  
 
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['data']['data'];
@@ -24,7 +24,7 @@ class ProductService {
       for (var item in data) {
         products.add(ProductModel.fromJson(item));
       }
-      print(data);
+     
 
       return products;
     } else {

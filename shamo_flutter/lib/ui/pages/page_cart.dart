@@ -1,6 +1,8 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo_flutter/cubit/cart_cubit.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 import 'package:shamo_flutter/ui/widgets/custom_button.dart';
 import 'package:shamo_flutter/ui/widgets/custom_cart_card.dart';
@@ -25,7 +27,7 @@ class CartPage extends StatelessWidget {
     }
 
     Widget emptyCart() {
-      return Container(
+      return SizedBox(
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,10 +72,11 @@ class CartPage extends StatelessWidget {
 
     Widget buildContent() {
       return ListView(
-        children: [
-          Cart(),
-        ],
-      );
+          children: context.read<CartCubit>().carts.map((e) {
+        return CartCard(
+          cartModel: e,
+        );
+      }).toList());
     }
 
     Widget bottomNavbar() {
@@ -112,7 +115,7 @@ class CartPage extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            Container(
+            SizedBox(
               height: 50,
               width: double.infinity,
               child: TextButton(

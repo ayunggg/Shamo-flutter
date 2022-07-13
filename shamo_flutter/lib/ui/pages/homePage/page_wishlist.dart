@@ -70,8 +70,10 @@ class WishListPage extends StatelessWidget {
                   ),
                   CustomButton(
                     title: 'Explore Store',
-                    onPressed: () {},
-                    width: 150,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/main');
+                    },
+                    width: 200,
                   )
                 ],
               ),
@@ -91,13 +93,10 @@ class WishListPage extends StatelessWidget {
                 width: double.infinity,
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 30),
-                  children: context
-                      .read<WishlistCubitCubit>()
-                      .wishlist
-                      .map((e) => WishlistCard(
-                            productModel: e,
-                          ))
-                      .toList(),
+                  children:
+                      context.read<WishlistCubitCubit>().wishlist.map((e) {
+                    return WishlistCard(productModel: e);
+                  }).toList(),
                 ),
               ),
             ),
@@ -109,7 +108,9 @@ class WishListPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: kBackgroundColor1,
       appBar: header(),
-      body: buildContent(),
+      body: context.read<WishlistCubitCubit>().wishlist.isEmpty
+          ? emptyWishlist()
+          : buildContent(),
     );
   }
 }

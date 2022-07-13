@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shamo_flutter/cubit/cart_cubit.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 
-class Cart extends StatelessWidget {
-  const Cart({Key? key}) : super(key: key);
+import '../../models/cart_model.dart';
 
+class CartCard extends StatefulWidget {
+  final CartModel cartModel;
+  const CartCard({
+    Key? key,
+    required this.cartModel,
+  }) : super(key: key);
+
+  @override
+  State<CartCard> createState() => _CartCardState();
+}
+
+class _CartCardState extends State<CartCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-      margin: EdgeInsets.all(30),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      margin: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         color: kBackgorundColor2,
         borderRadius: BorderRadius.circular(12),
@@ -19,13 +32,13 @@ class Cart extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  'assets/images/image_newarrival1.png',
+                child: Image.network(
+                  widget.cartModel.productModel.gallery[0].url,
                   width: 60,
                   height: 60,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 12,
               ),
               Expanded(
@@ -33,16 +46,16 @@ class Cart extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Terrex Urban Low',
+                      widget.cartModel.productModel.name,
                       style: kSemiBold.copyWith(
                         color: kWhiteColor,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 2,
                     ),
                     Text(
-                      '\$143,98',
+                      '\$${widget.cartModel.productModel.price}',
                       style: kRegular.copyWith(
                         color: kBlueColor,
                       ),
@@ -52,33 +65,56 @@ class Cart extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Image.asset(
-                    'assets/icons/icon_plus.png',
-                    width: 16,
-                    height: 16,
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        context
+                            .read<CartCubit>()
+                            .addQuantity(widget.cartModel.id);
+                      });
+                    },
+                    child: Image.asset(
+                      'assets/icons/icon_plus.png',
+                      width: 16,
+                      height: 16,
+                    ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
                   Text(
-                    '2',
+                    widget.cartModel.quantity.toString(),
                     style: kMedium.copyWith(
                       color: kWhiteColor,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
-                  Image.asset(
-                    'assets/icons/icon_min.png',
-                    width: 16,
-                    height: 16,
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        context
+                            .read<CartCubit>()
+                            .reduceQuantity(widget.cartModel.id);
+                      });
+                    },
+                    child: widget.cartModel.quantity > 1
+                        ? Image.asset(
+                            'assets/icons/icon_min.png',
+                            width: 16,
+                            height: 16,
+                          )
+                        : const SizedBox(
+                            width: 16,
+                            height: 16,
+                          ),
                   ),
                 ],
               )
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 12,
           ),
           Row(
@@ -88,7 +124,7 @@ class Cart extends StatelessWidget {
                 width: 16,
                 height: 16,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Text(

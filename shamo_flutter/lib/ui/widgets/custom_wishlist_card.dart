@@ -6,13 +6,18 @@ import 'package:shamo_flutter/cubit/wishlist_cubit_cubit.dart';
 import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 
-class WishlistCard extends StatelessWidget {
+class WishlistCard extends StatefulWidget {
   final ProductModel productModel;
   const WishlistCard({
     Key? key,
     required this.productModel,
   }) : super(key: key);
 
+  @override
+  State<WishlistCard> createState() => _WishlistCardState();
+}
+
+class _WishlistCardState extends State<WishlistCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,7 +35,7 @@ class WishlistCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
-              productModel.gallery[0].url,
+              widget.productModel.gallery[0].url,
               width: 60,
               height: 60,
             ),
@@ -43,7 +48,7 @@ class WishlistCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  productModel.name,
+                  widget.productModel.name,
                   style: kSemiBold.copyWith(
                     color: kWhiteColor,
                   ),
@@ -52,7 +57,7 @@ class WishlistCard extends StatelessWidget {
                   height: 2,
                 ),
                 Text(
-                  '\$${productModel.price}',
+                  '\$${widget.productModel.price}',
                   style: kRegular.copyWith(
                     color: kBlueColor,
                   ),
@@ -62,7 +67,25 @@ class WishlistCard extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              context.read<WishlistCubitCubit>().setProduct(productModel);
+              setState(() {
+                context
+                    .read<WishlistCubitCubit>()
+                    .setProduct(widget.productModel);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: kGreenColor,
+                    duration: Duration(seconds: 1),
+                    content: Text(
+                      'Success to Remove Product from Wishlist!',
+                      style: kRegular.copyWith(
+                        fontSize: 12,
+                        color: kWhiteColor,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              });
             },
             child: Image.asset(
               'assets/icons/icon_love.png',

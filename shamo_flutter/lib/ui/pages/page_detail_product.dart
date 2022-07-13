@@ -7,9 +7,11 @@ import 'package:shamo_flutter/cubit/product_cubit.dart';
 import 'package:shamo_flutter/cubit/wishlist_cubit_cubit.dart';
 import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
-import 'package:shamo_flutter/ui/pages/homePage/page_wishlist.dart';
+import 'package:shamo_flutter/ui/pages/page_cart.dart';
 import 'package:shamo_flutter/ui/widgets/custom_button.dart';
 import 'package:shamo_flutter/ui/widgets/custom_familiar_shoes.dart';
+
+import '../../cubit/cart_cubit.dart';
 
 class DetailProduct extends StatefulWidget {
   final ProductModel product;
@@ -184,10 +186,8 @@ class _DetailProductState extends State<DetailProduct> {
                   CustomButton(
                     title: 'View My Cart',
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WishListPage()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => CartPage()));
                     },
                   )
                 ],
@@ -416,6 +416,8 @@ class _DetailProductState extends State<DetailProduct> {
                     child: CustomButton(
                       title: 'Add to Cart',
                       onPressed: () {
+                        context.read<CartCubit>().fetchCart(widget.product);
+
                         showSuccessDialog();
                       },
                     ),

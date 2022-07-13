@@ -25,7 +25,7 @@ class WishlistCubitCubit extends Cubit<bool> {
     }
   }
 
-  void setProduct(ProductModel productModel) {
+  setProduct(ProductModel productModel) {
     if (!isWishlist(productModel)) {
       _wishList.add(productModel);
     } else {
