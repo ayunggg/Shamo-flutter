@@ -241,42 +241,44 @@ class _DetailProductState extends State<DetailProduct> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      context
-                          .read<WishlistCubitCubit>()
-                          .setProduct(widget.product);
-                      if (context
-                          .read<WishlistCubitCubit>()
-                          .isWishlist(widget.product)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: kGreenColor,
-                            duration: Duration(seconds: 1),
-                            content: Text(
-                              'Has been added to the Wishlist',
-                              style: kRegular.copyWith(
-                                fontSize: 12,
-                                color: kWhiteColor,
+                      setState(() {
+                        context
+                            .read<WishlistCubitCubit>()
+                            .setProduct(widget.product);
+                        if (context
+                            .read<WishlistCubitCubit>()
+                            .isWishlist(widget.product)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: kGreenColor,
+                              duration: Duration(seconds: 1),
+                              content: Text(
+                                'Has been added to the Wishlist',
+                                style: kRegular.copyWith(
+                                  fontSize: 12,
+                                  color: kWhiteColor,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            duration: Duration(seconds: 1),
-                            backgroundColor: Color(0xFFED6363),
-                            content: Text(
-                              'Has been removed from the Wishlist',
-                              style: kRegular.copyWith(
-                                fontSize: 12,
-                                color: kWhiteColor,
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              duration: Duration(seconds: 1),
+                              backgroundColor: Color(0xFFED6363),
+                              content: Text(
+                                'Has been removed from the Wishlist',
+                                style: kRegular.copyWith(
+                                  fontSize: 12,
+                                  color: kWhiteColor,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
-                        );
-                      }
+                          );
+                        }
+                      });
                     },
                     child: BlocBuilder<WishlistCubitCubit, bool>(
                       builder: (context, _) {
@@ -285,7 +287,7 @@ class _DetailProductState extends State<DetailProduct> {
                           height: 46,
                           decoration: BoxDecoration(
                             color: context
-                                    .read<WishlistCubitCubit>()
+                                    .watch<WishlistCubitCubit>()
                                     .isWishlist(widget.product)
                                 ? kGreenColor
                                 : kGreyColor,
@@ -297,7 +299,7 @@ class _DetailProductState extends State<DetailProduct> {
                               width: 20,
                               height: 18,
                               color: context
-                                      .read<WishlistCubitCubit>()
+                                      .watch<WishlistCubitCubit>()
                                       .isWishlist(widget.product)
                                   ? kWhiteColor
                                   : Color(0xFF1F1D2B),

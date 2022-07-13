@@ -16,7 +16,7 @@ class WishlistCubitCubit extends Cubit<bool> {
     _wishList = wishList;
   }
 
-  isWishlist(ProductModel productModel) {
+  bool isWishlist(ProductModel productModel) {
     if (_wishList.indexWhere((element) => element.id == productModel.id) ==
         -1) {
       return false;
