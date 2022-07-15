@@ -416,7 +416,9 @@ class _DetailProductState extends State<DetailProduct> {
                     child: CustomButton(
                       title: 'Add to Cart',
                       onPressed: () {
-                        context.read<CartCubit>().fetchCart(widget.product);
+                        setState(() {
+                          context.read<CartCubit>().fetchCart(widget.product);
+                        });
 
                         showSuccessDialog();
                       },

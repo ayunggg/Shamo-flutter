@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -6,8 +8,8 @@ import 'package:shamo_flutter/models/product_model.dart';
 
 part 'cart_state.dart';
 
-class CartCubit extends Cubit<bool> {
-  CartCubit() : super(false);
+class CartCubit extends Cubit<CartState> {
+  CartCubit() : super(CartInitial());
 
   List<CartModel> cart = [];
 
@@ -25,7 +27,8 @@ class CartCubit extends Cubit<bool> {
     if (productExist(productModel)) {
       int index = cart
           .indexWhere((element) => element.productModel.id == productModel.id);
-      cart[index].quantity++;
+
+      emit(CartAddQty(cart[index].quantity++));
     } else {
       cart.add(
         CartModel(
@@ -34,12 +37,13 @@ class CartCubit extends Cubit<bool> {
           quantity: 1,
         ),
       );
-      
     }
   }
 
   removeCart(int id) {
-    cart.removeAt(id);
+    final int _cart = cart[id].id;
+    cart.removeAt(_cart);
+    emit(CartRemove(_cart));
   }
 
   addQuantity(int id) {

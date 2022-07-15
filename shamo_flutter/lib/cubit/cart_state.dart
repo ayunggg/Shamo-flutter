@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables
+
 part of 'cart_cubit.dart';
 
 @immutable
@@ -16,10 +18,29 @@ class CartLoading extends CartState {}
 class CartSuccess extends CartState {
   final List<CartModel> product;
 
-  const CartSuccess(this.product);
+  CartSuccess(this.product);
   @override
   // TODO: implement props
   List<Object> get props => [product];
+}
+
+class CartAddQty extends CartState {
+  final int cart;
+
+  CartAddQty(this.cart);
+  @override
+  // TODO: implement props
+  List<Object> get props => [cart];
+}
+
+class CartRemove extends CartState {
+  final int id;
+
+  CartRemove(this.id);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [id];
 }
 
 class CartFailed extends CartState {

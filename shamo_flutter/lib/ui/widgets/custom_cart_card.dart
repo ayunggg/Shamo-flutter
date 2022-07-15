@@ -127,11 +127,18 @@ class _CartCardState extends State<CartCard> {
               const SizedBox(
                 width: 4,
               ),
-              Text(
-                'Remove',
-                style: kLight.copyWith(
-                  fontSize: 12,
-                  color: kRedColor,
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    context.read<CartCubit>().removeCart(widget.cartModel.id);
+                  });
+                },
+                child: Text(
+                  'Remove',
+                  style: kLight.copyWith(
+                    fontSize: 12,
+                    color: kRedColor,
+                  ),
                 ),
               ),
             ],

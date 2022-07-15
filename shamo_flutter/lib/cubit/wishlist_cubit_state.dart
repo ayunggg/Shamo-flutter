@@ -22,6 +22,7 @@ class WishlistSuccess extends WishlistCubitState {
   List<Object> get props => [wishlist];
 }
 
+
 class WishlistError extends WishlistCubitState {
   final String error;
 

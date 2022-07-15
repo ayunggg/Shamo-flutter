@@ -72,7 +72,7 @@ class CartPage extends StatelessWidget {
 
     Widget buildContent() {
       return ListView(
-          children: context.read<CartCubit>().carts.map((e) {
+          children: context.watch<CartCubit>().carts.map((e) {
         return CartCard(
           cartModel: e,
         );
@@ -157,8 +157,11 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: kBackgroundColor1,
       appBar: header(),
-      body: buildContent(),
-      bottomNavigationBar: bottomNavbar(),
+      body: context.read<CartCubit>().carts.isEmpty
+          ? emptyCart()
+          : buildContent(),
+      bottomNavigationBar:
+          context.read<CartCubit>().carts.isEmpty ? SizedBox() : bottomNavbar(),
     );
   }
 }

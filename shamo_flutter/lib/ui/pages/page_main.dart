@@ -6,8 +6,10 @@ import 'package:shamo_flutter/ui/pages/homePage/page_chat.dart';
 import 'package:shamo_flutter/ui/pages/homePage/page_home.dart';
 import 'package:shamo_flutter/ui/pages/homePage/page_profile.dart';
 import 'package:shamo_flutter/ui/pages/homePage/page_wishlist.dart';
+import 'package:shamo_flutter/ui/pages/page_cart.dart';
 
 class MainPage extends StatefulWidget {
+  
   const MainPage({Key? key}) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class _MainPageState extends State<MainPage> {
         ),
         backgroundColor: kGreenColor,
         onPressed: () {
-          Navigator.pushNamed(context, '/cart');
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage( )));
         },
       );
     }
