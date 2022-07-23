@@ -130,7 +130,7 @@ class _CartCardState extends State<CartCard> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    context.read<CartCubit>().removeCart(widget.cartModel.id);
+                    context.read<CartCubit>().remove_cart(widget.cartModel.id);
                   });
                 },
                 child: Text(

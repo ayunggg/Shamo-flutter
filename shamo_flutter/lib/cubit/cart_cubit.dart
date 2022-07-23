@@ -27,7 +27,7 @@ class CartCubit extends Cubit<CartState> {
     if (productExist(productModel)) {
       int index = cart
           .indexWhere((element) => element.productModel.id == productModel.id);
-
+      print('indexnya : ${productModel.id}');
       emit(CartAddQty(cart[index].quantity++));
     } else {
       cart.add(
@@ -40,10 +40,18 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
+  void remove_cart(int id) {
+    try {
+      emit(CartLoading());
+      final idn = cart.removeAt(id);
+      emit(CartRemove(idn.id));
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   removeCart(int id) {
-    final int _cart = cart[id].id;
-    cart.removeAt(_cart);
-    emit(CartRemove(_cart));
+    cart.removeAt(id);
   }
 
   addQuantity(int id) {
@@ -70,7 +78,7 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  productExist(ProductModel productModel) {
+  bool productExist(ProductModel productModel) {
     if (cart.indexWhere((element) => element.id == productModel.id) == -1) {
       return false;
     } else {

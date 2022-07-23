@@ -14,6 +14,16 @@ class CartInitial extends CartState {}
 
 class CartLoading extends CartState {}
 
+class CartProduct extends CartState {
+  final List<ProductModel> product;
+
+  CartProduct(this.product);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => product;
+}
+
 //NOTE : If Success Add Product To Cart
 class CartSuccess extends CartState {
   final List<CartModel> product;

@@ -186,8 +186,10 @@ class _DetailProductState extends State<DetailProduct> {
                   CustomButton(
                     title: 'View My Cart',
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => CartPage()));
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => CartPage()),
+                          (route) => false);
                     },
                   )
                 ],

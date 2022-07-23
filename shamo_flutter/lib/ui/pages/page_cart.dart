@@ -1,8 +1,10 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shamo_flutter/cubit/cart_cubit.dart';
+import 'package:shamo_flutter/cubit/product_cubit.dart';
+import 'package:shamo_flutter/models/product_model.dart';
 import 'package:shamo_flutter/theme/theme.dart';
 import 'package:shamo_flutter/ui/widgets/custom_button.dart';
 import 'package:shamo_flutter/ui/widgets/custom_cart_card.dart';
@@ -12,16 +14,40 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("length : ${context.read<CartCubit>().carts.length}");
+    print("id: ${context.read<CartCubit>().carts}");
     PreferredSize header() {
       return PreferredSize(
         child: AppBar(
-          backgroundColor: kBackgroundColor,
-          centerTitle: true,
-          elevation: 1,
-          title: Text(
-            'Your Cart',
-          ),
-        ),
+            backgroundColor: kBackgroundColor,
+            centerTitle: true,
+            elevation: 1,
+            automaticallyImplyLeading: false,
+            title: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/main', (route) => false);
+                  },
+                  child: Icon(
+                    Icons.arrow_back,
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 2 * 45,
+                  child: Center(
+                    child: Text(
+                      'Your Cart',
+                      style: kMedium.copyWith(
+                        fontSize: 16,
+                        color: kWhiteColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )),
         preferredSize: Size.fromHeight(70),
       );
     }
@@ -70,9 +96,9 @@ class CartPage extends StatelessWidget {
       );
     }
 
-    Widget buildContent() {
+    Widget buildContent(ProductModel productModel) {
       return ListView(
-          children: context.watch<CartCubit>().carts.map((e) {
+          children: context.watch<CartCubit>().cart.map((e) {
         return CartCard(
           cartModel: e,
         );
@@ -154,14 +180,35 @@ class CartPage extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      backgroundColor: kBackgroundColor1,
-      appBar: header(),
-      body: context.read<CartCubit>().carts.isEmpty
-          ? emptyCart()
-          : buildContent(),
-      bottomNavigationBar:
-          context.read<CartCubit>().carts.isEmpty ? SizedBox() : bottomNavbar(),
+    return BlocConsumer<ProductCubit, ProductState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        if (state is ProductFailed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: kRedColor,
+              content: Text(state.error),
+            ),
+          );
+        }
+        if (state is ProductSuccess) {
+          return Scaffold(
+            backgroundColor: kBackgroundColor1,
+            appBar: header(),
+            body: context.read<CartCubit>().cart.isEmpty
+                ? emptyCart()
+                : buildContent(state.product[0]),
+            bottomNavigationBar: context.read<CartCubit>().carts.isEmpty
+                ? SizedBox()
+                : bottomNavbar(),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }
