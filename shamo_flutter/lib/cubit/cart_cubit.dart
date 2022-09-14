@@ -23,44 +23,52 @@ class CartCubit extends Cubit<CartState> {
     return productModel.price * cart[0].quantity;
   }
 
-  fetchCart(ProductModel productModel) {
-    if (productExist(productModel)) {
-      int index = cart
-          .indexWhere((element) => element.productModel.id == productModel.id);
-      print('indexnya : ${productModel.id}');
-      emit(CartAddQty(cart[index].quantity++));
-    } else {
-      cart.add(
-        CartModel(
-          id: cart.length,
-          productModel: productModel,
-          quantity: 1,
-        ),
-      );
+  fetchCart(ProductModel productModel) async {
+    try {
+      emit(CartLoading());
+
+      if (productExist(productModel)) {
+        int index = cart.indexWhere(
+            (element) => element.productModel.id == productModel.id);
+        cart[index].quantity++;
+
+        emit(CartSuccess(cart));
+        print('ini jalan 1 $cart');
+      } else {
+        cart.add(
+          CartModel(
+            id: cart.length,
+            productModel: productModel,
+            quantity: 1,
+          ),
+        );
+        emit(CartSuccess(cart));
+        print('ini jalan 2 $cart');
+      }
+    } catch (e) {
+      emit(CartFailed(e.toString()));
     }
   }
 
   void remove_cart(int id) {
     try {
       emit(CartLoading());
-      final idn = cart.removeAt(id);
+      var idn = cart.removeAt(id);
       emit(CartRemove(idn.id));
     } catch (e) {
-      rethrow;
+      emit(CartFailed(e.toString()));
     }
   }
 
-  removeCart(int id) {
-    cart.removeAt(id);
-  }
+  removeCart(int id) {}
 
   addQuantity(int id) {
-    cart[id].quantity++;
+    emit(CartAddQty(cart[id].quantity++));
   }
 
   reduceQuantity(int id) {
-    if (cart.length > 1) {
-      cart[id].quantity--;
+    if (cart[id].quantity > 1) {
+      emit(CartReduceQty(cart[id].quantity--));
     }
   }
 
@@ -75,11 +83,17 @@ class CartCubit extends Cubit<CartState> {
     double totalPrice = 0;
     for (var item in cart) {
       totalPrice += (item.quantity * item.productModel.price);
+      return totalPrice;
     }
+
+    print('ini Total Price $totalPrice');
+    emit(CartTotalPrice(totalPrice));
   }
 
   bool productExist(ProductModel productModel) {
-    if (cart.indexWhere((element) => element.id == productModel.id) == -1) {
+    if (cart.indexWhere(
+            (element) => element.productModel.id == productModel.id) ==
+        -1) {
       return false;
     } else {
       return true;

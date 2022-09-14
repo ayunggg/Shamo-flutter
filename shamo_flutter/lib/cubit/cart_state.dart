@@ -34,10 +34,28 @@ class CartSuccess extends CartState {
   List<Object> get props => [product];
 }
 
+class CartAddNew extends CartState {
+  final CartModel product;
+
+  CartAddNew(this.product);
+  @override
+  // TODO: implement props
+  List<Object> get props => [product];
+}
+
 class CartAddQty extends CartState {
   final int cart;
 
   CartAddQty(this.cart);
+  @override
+  // TODO: implement props
+  List<Object> get props => [cart];
+}
+
+class CartReduceQty extends CartState {
+  final int cart;
+
+  CartReduceQty(this.cart);
   @override
   // TODO: implement props
   List<Object> get props => [cart];
@@ -51,6 +69,16 @@ class CartRemove extends CartState {
   @override
   // TODO: implement props
   List<Object> get props => [id];
+}
+
+class CartTotalPrice extends CartState {
+  final double price;
+
+  CartTotalPrice(this.price);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [price];
 }
 
 class CartFailed extends CartState {

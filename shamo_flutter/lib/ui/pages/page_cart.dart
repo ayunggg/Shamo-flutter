@@ -15,7 +15,6 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("length : ${context.read<CartCubit>().carts.length}");
-    print("id: ${context.read<CartCubit>().carts}");
     PreferredSize header() {
       return PreferredSize(
         child: AppBar(
@@ -121,7 +120,7 @@ class CartPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '\$287,96',
+                  context.watch<CartCubit>().totalPrice().toString(),
                   style: kSemiBold.copyWith(
                     fontSize: 16,
                     color: kBlueColor,

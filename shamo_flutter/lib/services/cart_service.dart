@@ -2,37 +2,25 @@ import 'package:shamo_flutter/models/cart_model.dart';
 import 'package:shamo_flutter/models/product_model.dart';
 
 class CartService {
-  
   List<CartModel> cart = [];
-
-  List<CartModel> get carts => cart;
-
-  set carts(List<CartModel> cart) {
-    cart = carts;
-  }
 
   GetTotalPrice(ProductModel productModel) {
     return productModel.price * cart[0].quantity;
   }
- 
 
   fetchCart(ProductModel productModel) {
-    try {
-      if (productExist(productModel)) {
-        int index = cart.indexWhere(
-            (element) => element.productModel.id == productModel.id);
-        cart[index].quantity++;
-      } else {
-        cart.add(
-          CartModel(
-            id: cart.length,
-            productModel: productModel,
-            quantity: 1,
-          ),
-        );
-      }
-    } catch (e) {
-      rethrow;
+    if (productExist(productModel)) {
+      int index = cart
+          .indexWhere((element) => element.productModel.id == productModel.id);
+      cart[index].quantity++;
+    } else {
+      cart.add(
+        CartModel(
+          id: cart.length,
+          productModel: productModel,
+          quantity: 1,
+        ),
+      );
     }
   }
 

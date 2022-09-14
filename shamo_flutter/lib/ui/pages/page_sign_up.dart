@@ -199,7 +199,7 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ),  
           ),
         ),
       );

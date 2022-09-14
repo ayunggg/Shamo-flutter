@@ -415,14 +415,33 @@ class _DetailProductState extends State<DetailProduct> {
                     width: 16,
                   ),
                   Expanded(
-                    child: CustomButton(
-                      title: 'Add to Cart',
-                      onPressed: () {
-                        setState(() {
-                          context.read<CartCubit>().fetchCart(widget.product);
-                        });
-
-                        showSuccessDialog();
+                    child: BlocConsumer<CartCubit, CartState>(
+                      listener: (context, state) {
+                        // TODO: implement listener
+                        if (state is CartSuccess) {
+                          showSuccessDialog();
+                        } else if (state is CartFailed) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: kRedColor,
+                              content: Text(state.error),
+                            ),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is CartLoading) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return CustomButton(
+                          title: 'Add to Cart',
+                          onPressed: () {
+                            print(widget.product);
+                            context.read<CartCubit>().fetchCart(widget.product);
+                          },
+                        );
                       },
                     ),
                   )

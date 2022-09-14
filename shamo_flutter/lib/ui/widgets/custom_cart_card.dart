@@ -65,19 +65,35 @@ class _CartCardState extends State<CartCard> {
               ),
               Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        context
-                            .read<CartCubit>()
-                            .addQuantity(widget.cartModel.id);
-                      });
+                  BlocBuilder<CartCubit, CartState>(
+                    builder: (context, state) {
+                      if (state is CartAddQty) {
+                        return GestureDetector(
+                          onTap: () {
+                            context
+                                .read<CartCubit>()
+                                .addQuantity(widget.cartModel.id);
+                          },
+                          child: Image.asset(
+                            'assets/icons/icon_plus.png',
+                            width: 16,
+                            height: 16,
+                          ),
+                        );
+                      }
+                      return GestureDetector(
+                        onTap: () {
+                          context
+                              .read<CartCubit>()
+                              .addQuantity(widget.cartModel.id);
+                        },
+                        child: Image.asset(
+                          'assets/icons/icon_plus.png',
+                          width: 16,
+                          height: 16,
+                        ),
+                      );
                     },
-                    child: Image.asset(
-                      'assets/icons/icon_plus.png',
-                      width: 16,
-                      height: 16,
-                    ),
                   ),
                   const SizedBox(
                     height: 2,
@@ -91,24 +107,45 @@ class _CartCardState extends State<CartCard> {
                   const SizedBox(
                     height: 2,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        context
-                            .read<CartCubit>()
-                            .reduceQuantity(widget.cartModel.id);
-                      });
+                  BlocBuilder<CartCubit, CartState>(
+                    builder: (context, state) {
+                      if (state is CartReduceQty) {
+                        return GestureDetector(
+                          onTap: () {
+                            context
+                                .read<CartCubit>()
+                                .reduceQuantity(widget.cartModel.id);
+                          },
+                          child: widget.cartModel.quantity > 1
+                              ? Image.asset(
+                                  'assets/icons/icon_min.png',
+                                  width: 16,
+                                  height: 16,
+                                )
+                              : const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                ),
+                        );
+                      }
+                      return GestureDetector(
+                        onTap: () {
+                          context
+                              .read<CartCubit>()
+                              .reduceQuantity(widget.cartModel.id);
+                        },
+                        child: widget.cartModel.quantity > 1
+                            ? Image.asset(
+                                'assets/icons/icon_min.png',
+                                width: 16,
+                                height: 16,
+                              )
+                            : const SizedBox(
+                                width: 16,
+                                height: 16,
+                              ),
+                      );
                     },
-                    child: widget.cartModel.quantity > 1
-                        ? Image.asset(
-                            'assets/icons/icon_min.png',
-                            width: 16,
-                            height: 16,
-                          )
-                        : const SizedBox(
-                            width: 16,
-                            height: 16,
-                          ),
                   ),
                 ],
               )
@@ -129,9 +166,7 @@ class _CartCardState extends State<CartCard> {
               ),
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    context.read<CartCubit>().remove_cart(widget.cartModel.id);
-                  });
+                  context.read<CartCubit>().remove_cart(widget.cartModel.id);
                 },
                 child: Text(
                   'Remove',
